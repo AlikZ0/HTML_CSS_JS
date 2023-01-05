@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./style.css">
+    <title>CSS Светлый темный режим с Chart.js - @https://github.com/AlikZ0</title>
+</head>
+<body>
+
+    <body>
+        <main class="conteudo">
+            <div class="titulos">
+                <label class="checkbox">
+                    <input type="checkbox" id="js-checkbox">
+                    <span class="check-deslizante arredondado"></span>
+                </label>
+                <a>AlikZ0</a>
+            </div>
+            <div class="grafico">
+                <canvas id="canvas"></canvas>
+            </div>
+        </main>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.min.js"></script>
+        <script>
+            let modoEscuro = false;
+            let elementoCheckbox = document.querySelector('#js-checkbox');
+    
+            elementoCheckbox.addEventListener('change', function () {
+                if (this.checked) {
+                    modoEscuro = true;
+                } else {
+                    modoEscuro = false;
+                }
+                mudarThema();
+                inicializarChart();
+            });
+    
+    
+            function mudarThema() {
+                var elementoCorpo = document.body;
+                elementoCorpo.classList.toggle("modo-escuro");
+            }
+    
+    
+            function inicializarChart() {
+    
+                var randomScalingFactor = function () {
+                    return Math.round(Math.random() * 100);
+                };
+                var chartColors = {
+                    red: 'rgb(255, 99, 132)',
+                    orange: 'rgb(255, 159, 64)',
+                    yellow: 'rgb(255, 205, 86)',
+                    green: 'rgb(75, 192, 192)',
+                    blue: 'rgb(54, 162, 235)',
+                    purple: 'rgb(153, 102, 255)',
+                    grey: 'rgb(231,233,237)'
+                };
+    
+                var color = Chart.helpers.color;
+                var config = {
+                    type: 'radar',
+                    data: {
+                        labels: [
+                            ["Есть", "обедать"],
+                            ["Напиток", "Вода"], "Спать", ["программа", "HTML"], "Упражняться", ["Подготовить", "Питание"], "Учиться"
+                        ],
+                        datasets: [{
+                            label: "Первый уровень",
+                            backgroundColor: color(chartColors.red).alpha(0.2).rgbString(),
+                            borderColor: chartColors.red,
+                            pointBackgroundColor: chartColors.red,
+                            data: [
+                                randomScalingFactor(),
+                                randomScalingFactor(),
+                                randomScalingFactor(),
+                                randomScalingFactor(),
+                                randomScalingFactor(),
+                                randomScalingFactor(),
+                                randomScalingFactor()
+                            ]
+                        }, {
+                            label: "Второй уровень",
+                            backgroundColor: color(chartColors.blue).alpha(0.2).rgbString(),
+                            borderColor: chartColors.blue,
+                            pointBackgroundColor: chartColors.blue,
+                            data: [
+                                randomScalingFactor(),
+                                randomScalingFactor(),
+                                randomScalingFactor(),
+                                randomScalingFactor(),
+                                randomScalingFactor(),
+                                randomScalingFactor(),
+                                randomScalingFactor()
+                            ]
+                        },]
+                    },
+                    options: {
+                        legend: {
+                            position: 'top',
+                            labels: {
+                                fontColor: modoEscuro ? 'white' : '#68686c'
+                            }
+                        },
+                        title: {
+                            display: true,
+                            text: 'Exemplo Chart.js - @AlikZ0',
+                            fontColor: modoEscuro ? 'white' : '#212123'
+                        },
+                        scale: {
+                            ticks: {
+                                beginAtZero: true,
+                                fontColor: modoEscuro ? '#EFEFEF' : '#68686c', //Название оси Y 10, 20 30 
+                                showLabelBackdrop: false // скрыть фоновый прямоугольник заголовка по оси Y
+                            },
+                            pointLabels: {
+                                fontColor: modoEscuro ? 'white' : '#68686c' // Метки оси X
+                            },
+                            gridLines: {
+                                color: modoEscuro ? 'rgba(255, 255, 255, 0.2)' : 'rgba(104, 104, 108, 0.2)'
+                            },
+                            angleLines: {
+                                color: modoEscuro ? 'rgba(255, 255, 255, 0.2)' : 'rgba(104, 104, 108, 0.2)' //линии, соединяющие точки
+                            }
+                        }
+                    }
+                };
+    
+    
+                Chart.plugins.register({
+                    beforeDraw: function (chartInstance) {
+                        var ctx = chartInstance.chart.ctx;
+                        ctx.fillStyle = modoEscuro ? '#212123' : '#EFEFEF';
+                        ctx.fillRect(0, 0, chartInstance.chart.width, chartInstance.chart.height);
+                    }
+                })
+                window.myRadar = new Chart(document.getElementById("canvas"), config);
+            }
+            inicializarChart();
+    
+    
+        </script>
+    </body>
+    
+    </html>
